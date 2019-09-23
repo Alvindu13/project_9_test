@@ -9,7 +9,9 @@ import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
 /**
  * <p>Implémentation du Proxy d'accès à la couche Business.</p>
  */
-public class BusinessProxyImpl implements BusinessProxy {
+public class BusinessProxyImpl implements BusinessProxy  {
+
+
 
     // ==================== Attributs Static ====================
     /** Le Proxy d'accès à la couche Consumer-DAO */
@@ -36,6 +38,7 @@ public class BusinessProxyImpl implements BusinessProxy {
         }
         return BusinessProxyImpl.INSTANCE;
     }
+
 
     /**
      * Renvoie l'instance unique de la classe (design pattern Singleton).
