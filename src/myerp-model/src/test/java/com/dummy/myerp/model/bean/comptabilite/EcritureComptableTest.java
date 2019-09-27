@@ -25,19 +25,22 @@ public class EcritureComptableTest {
         EcritureComptable vEcriture;
         vEcriture = new EcritureComptable();
 
+        //cas 1 : le compte est équilibré
         vEcriture.setLibelle("Equilibrée");
         vEcriture.getListLigneEcriture().add(this.createLigne(1, "200.50", null));
-        vEcriture.getListLigneEcriture().add(this.createLigne(1, "100.50", "33"));
-        vEcriture.getListLigneEcriture().add(this.createLigne(2, null, "301"));
-        vEcriture.getListLigneEcriture().add(this.createLigne(2, "40", "7"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "100.50", "33.00"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(2, null, "301.00"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(2, "40.00", "7.00"));
         Assert.assertTrue(vEcriture.toString(), vEcriture.isEquilibree());
 
+
+        //cas 2 : le compte n'est pas équilibré
         vEcriture.getListLigneEcriture().clear();
         vEcriture.setLibelle("Non équilibrée");
-        vEcriture.getListLigneEcriture().add(this.createLigne(1, "10", null));
-        vEcriture.getListLigneEcriture().add(this.createLigne(1, "20", "1"));
-        vEcriture.getListLigneEcriture().add(this.createLigne(2, null, "30"));
-        vEcriture.getListLigneEcriture().add(this.createLigne(2, "1", "2"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "10.00", null));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "20.00", "1.00"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(2, null, "30.00"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(2, "1.00", "2.00"));
         Assert.assertFalse(vEcriture.toString(), vEcriture.isEquilibree());
     }
 

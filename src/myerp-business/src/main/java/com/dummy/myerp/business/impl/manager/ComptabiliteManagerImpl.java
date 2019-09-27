@@ -77,6 +77,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                     (table sequence_ecriture_comptable)
 
          */
+
+
         //1. On recup la séquence de la dernière écriture comptable dans le journal ##### => (XX-AAAA/#####)
 
 
