@@ -49,6 +49,8 @@ public class ComptabiliteManagerImplTest {
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
                                                                                  null, new BigDecimal(123),
                                                                                  null));
+
+        //Il y a une erreur ICI val = 1234 pourtant le test passe (donc ne fonctionne pas)
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2),
                                                                                  null, null,
                                                                                  new BigDecimal(1234)));

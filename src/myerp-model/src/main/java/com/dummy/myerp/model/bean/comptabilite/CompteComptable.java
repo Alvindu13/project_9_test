@@ -1,6 +1,7 @@
 package com.dummy.myerp.model.bean.comptabilite;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.constraints.NotNull;
@@ -20,6 +21,12 @@ public class CompteComptable {
     @NotNull
     @Size(min = 1, max = 150)
     private String libelle;
+
+
+    //AJOUT
+    @NotNull
+    private BigDecimal solde;
+
 
 
     // ==================== Constructeurs ====================
