@@ -6,15 +6,14 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
+import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
+import com.dummy.myerp.model.bean.comptabilite.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import com.dummy.myerp.business.contrat.manager.ComptabiliteManager;
 import com.dummy.myerp.business.impl.AbstractBusinessManager;
-import com.dummy.myerp.model.bean.comptabilite.CompteComptable;
-import com.dummy.myerp.model.bean.comptabilite.EcritureComptable;
-import com.dummy.myerp.model.bean.comptabilite.JournalComptable;
-import com.dummy.myerp.model.bean.comptabilite.LigneEcritureComptable;
 import com.dummy.myerp.technical.exception.FunctionalException;
 import com.dummy.myerp.technical.exception.NotFoundException;
 
@@ -24,7 +23,9 @@ import com.dummy.myerp.technical.exception.NotFoundException;
  */
 public class ComptabiliteManagerImpl extends AbstractBusinessManager implements ComptabiliteManager {
 
-    // ==================== Attributs ====================
+    // ==================== Attributs ========================
+
+
 
 
     // ==================== Constructeurs ====================
@@ -62,6 +63,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     @Override
     public synchronized void addReference(EcritureComptable pEcritureComptable) {
         // TODO à implémenter
+
         // Bien se réferer à la JavaDoc de cette méthode !
         /* Le principe :
                 1.  Remonter depuis la persitance la dernière valeur de la séquence du journal pour l'année de l'écriture
@@ -73,7 +75,54 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 3.  Mettre à jour la référence de l'écriture avec la référence calculée (RG_Compta_5)
                 4.  Enregistrer (insert/update) la valeur de la séquence en persitance
                     (table sequence_ecriture_comptable)
+
          */
+        //1. On recup la séquence de la dernière écriture comptable dans le journal ##### => (XX-AAAA/#####)
+
+
+        try {
+            SequenceEcritureComptable sequenceEcritureComptable = new SequenceEcritureComptable();
+            EcritureComptable lastDAOEcritureComptable = getDaoProxy()
+                    .getComptabiliteDao()
+                    .getEcritureComptable(sequenceEcritureComptable.getDerniereValeur());
+
+
+            String reference = lastDAOEcritureComptable.getReference();
+            String[] ref = reference.split("/");
+            String codePlusYear = ref[0];
+            String sequence = ref[1];
+            String[] journalInfos = codePlusYear.split("-");
+            String journalCode = journalInfos[0];
+            String currentYear = journalInfos[1];
+
+
+            // On convertit le string en int pour faciliter la condition
+            int seqNumber = Integer.parseInt(sequence);
+
+            //2. On vérifie les enregistrements
+            if (seqNumber == 0){
+                seqNumber = 1;
+            } else {
+                seqNumber += 1;
+            }
+
+            // On reconvert le int en string sequence avec 5 caractères
+            String newSequence = String.format("%05d", seqNumber);
+
+            // Definir la référence à partir des infos qu'on a calculé
+            String newReference = journalCode + "-" + currentYear + "/" + newSequence;
+
+            //3. Metre à jour la référence de la présente écriture avec la nouvelle référence
+            pEcritureComptable.setReference(newReference);
+
+            getDaoProxy().getComptabiliteDao().insertEcritureComptable(pEcritureComptable);
+
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+        }
+
+
+
     }
 
     /**
