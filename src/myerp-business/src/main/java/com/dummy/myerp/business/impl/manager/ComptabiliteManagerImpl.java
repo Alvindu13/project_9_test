@@ -1,13 +1,13 @@
 package com.dummy.myerp.business.impl.manager;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 
 import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
 import com.dummy.myerp.model.bean.comptabilite.*;
+import jdk.nashorn.internal.parser.DateParser;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +77,26 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                     (table sequence_ecriture_comptable)
 
          */
+
+
+        // OK Jérrémie la dernire valeur correspond à la valeur de la dernière séquence du journal (exemple : 00112)
+        // L'année de l'écriture correspond surrement à getDate de l'écriture comptable
+
+
+        //Date dateEcriture = pEcritureComptable.getDate();
+        //SequenceEcritureComptable sequenceEcritureComptablePourCetteDateEcriture = getListS
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         //1. On recup la séquence de la dernière écriture comptable dans le journal ##### => (XX-AAAA/#####)
@@ -157,12 +177,15 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         }
 
         //--------------AJOUT-------
-        // ===== RG_Compta_1 : Le solde d'un compte comptable est égal à la somme des montants
+        // ===== RG_Compta_1 : Le solde d'un compte comptable est \u00E9gal \u00E0 la somme des montants
         // au débit des lignes d'écriture diminuées de la somme des montants au crédit.
         // Si le résultat est positif, le solde est dit "débiteur", si le résultat est négatif le solde est dit "créditeur".
+
         BigDecimal soldeCompte = pEcritureComptable.getTotalDebit().subtract(pEcritureComptable.getTotalCredit());
+
         if(soldeCompte.compareTo(BigDecimal.ZERO) > 0) pEcritureComptable.setLibelle("solde débiteur");
         else if(soldeCompte.compareTo(BigDecimal.ZERO) < 0) pEcritureComptable.setLibelle("solde créditeur");
+
 
 
         // ===== RG_Compta_2 : Pour qu'une écriture comptable soit valide, elle doit être équilibrée
@@ -194,6 +217,37 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(pEcritureComptable.getDate());
+
+        if (Integer.parseInt(pEcritureComptable.getReference().substring(3, 6)) != calendar.get(Calendar.YEAR)){
+            //remplacer par un logger ou mettre un try catch
+            System.out.println("");
+            throw new FunctionalException(
+                    "L'année de référence de l'écriture comptable ne correspond pas à la date de son écriture");
+        }
+
+        if(!pEcritureComptable.getReference().substring(0, 1).equals(pEcritureComptable.getJournal().getCode())){
+            throw new FunctionalException(
+                    "Le code journal de référence ne correspond pas à la référence du journal lors de son écriture");
+        }
+
+        /*
+        Vérification de la séquence
+         */
+        Integer numberSequence = getListEcritureComptable().size();
+        String codeSequence = pEcritureComptable.getJournal().getCode();
+        // On met le string au bon format
+        String.format("%03d", numberSequence);
+        // On reconstruit la séquence
+        String sequence = codeSequence + numberSequence;
+
+        if(!pEcritureComptable.getReference().substring(8, 12).equals(sequence)){
+            throw new FunctionalException(
+                    "La séquence de référence ne correspond pas à la séquence de son écriture");
+        }
+
     }
 
 

@@ -24,8 +24,8 @@ public class CompteComptable {
 
 
     //AJOUT
-    @NotNull
-    private BigDecimal solde;
+    /*@NotNull
+    private BigDecimal solde;*/
 
 
 
