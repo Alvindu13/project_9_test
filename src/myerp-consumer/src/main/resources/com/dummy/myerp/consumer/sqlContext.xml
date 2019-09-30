@@ -89,6 +89,17 @@
                 WHERE ecriture_id = :ecriture_id
             </value>
         </property>
+
+        <property name="SQLgetSequenceEcritureComptableByYear">
+            <value>
+                SELECT * FROM myerp.sequence_ecriture_comptable
+                WHERE annee = :annee
+            </value>
+        </property>
+
+
+
+
     </bean>
 
 </beans>
