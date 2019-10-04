@@ -97,6 +97,12 @@
             </value>
         </property>
 
+        <property name="SQLgetListSequenceEcritureComptable">
+            <value>
+                SELECT * FROM myerp.sequence_ecriture_comptable
+            </value>
+        </property>
+
 
 
 

@@ -25,6 +25,9 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
     // ==================== Attributs ========================
 
+    Calendar calendar = new GregorianCalendar();
+
+
 
 
 
@@ -56,6 +59,16 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         return getDaoProxy().getComptabiliteDao().getListEcritureComptable();
     }
 
+    @Override
+    public List<SequenceEcritureComptable> getListSequenceComptable() {
+        return getDaoProxy().getComptabiliteDao().getListSequenceEcritureComptable();
+    }
+
+    /*@Override
+    public SequenceEcritureComptable getSequenceEcritureComptableByAnnee(int pAnnee) throws NotFoundException {
+        return getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByYear(pAnnee);
+    }*/
+
     /**
      * {@inheritDoc}
      */
@@ -81,20 +94,19 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         // OK Jérrémie la dernire valeur correspond à la valeur de la dernière séquence du journal (exemple : 00112)
         // L'année de l'écriture correspond surrement à getDate de l'écriture comptable
+        calendar.setTime(pEcritureComptable.getDate());
+        Integer pAnneeEcriture = calendar.get(Calendar.YEAR);
+        Integer derniereValeurSequence = 1;
 
 
-        //Date dateEcriture = pEcritureComptable.getDate();
-        //SequenceEcritureComptable sequenceEcritureComptablePourCetteDateEcriture = getListS
+        for (SequenceEcritureComptable vSequenceEcritureComptable : getListSequenceComptable()) {
+            if(vSequenceEcritureComptable.getAnnee() == pEcritureComptable.getDate().getYear()){
+                derniereValeurSequence =  vSequenceEcritureComptable.getDerniereValeur() + 1;
+            }
+        }
 
-
-
-
-
-
-
-
-
-
+        if (derniereValeurSequence == 1)
+        getDaoProxy().getComptabiliteDao().insertEcritureComptable();
 
 
 
@@ -102,7 +114,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         //1. On recup la séquence de la dernière écriture comptable dans le journal ##### => (XX-AAAA/#####)
 
 
-        try {
+        /*try {
             SequenceEcritureComptable sequenceEcritureComptable = new SequenceEcritureComptable();
             EcritureComptable lastDAOEcritureComptable = getDaoProxy()
                     .getComptabiliteDao()
@@ -141,7 +153,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         } catch (NotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
 
@@ -176,7 +188,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                                               vViolations));
         }
 
-        //--------------AJOUT-------
+        /*--------------AJOUT-------
         // ===== RG_Compta_1 : Le solde d'un compte comptable est \u00E9gal \u00E0 la somme des montants
         // au débit des lignes d'écriture diminuées de la somme des montants au crédit.
         // Si le résultat est positif, le solde est dit "débiteur", si le résultat est négatif le solde est dit "créditeur".
@@ -184,7 +196,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         BigDecimal soldeCompte = pEcritureComptable.getTotalDebit().subtract(pEcritureComptable.getTotalCredit());
 
         if(soldeCompte.compareTo(BigDecimal.ZERO) > 0) pEcritureComptable.setLibelle("solde débiteur");
-        else if(soldeCompte.compareTo(BigDecimal.ZERO) < 0) pEcritureComptable.setLibelle("solde créditeur");
+        else if(soldeCompte.compareTo(BigDecimal.ZERO) < 0) pEcritureComptable.setLibelle("solde créditeur");*/
 
 
 
@@ -218,8 +230,10 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
 
-        Calendar calendar = new GregorianCalendar();
-        calendar.setTime(pEcritureComptable.getDate());
+        //addReference(pEcritureComptable);
+
+
+        /*calendar.setTime(pEcritureComptable.getDate());
 
         if (Integer.parseInt(pEcritureComptable.getReference().substring(3, 6)) != calendar.get(Calendar.YEAR)){
             //remplacer par un logger ou mettre un try catch
@@ -233,9 +247,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                     "Le code journal de référence ne correspond pas à la référence du journal lors de son écriture");
         }
 
-        /*
-        Vérification de la séquence
-         */
+
         Integer numberSequence = getListEcritureComptable().size();
         String codeSequence = pEcritureComptable.getJournal().getCode();
         // On met le string au bon format
@@ -246,7 +258,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         if(!pEcritureComptable.getReference().substring(8, 12).equals(sequence)){
             throw new FunctionalException(
                     "La séquence de référence ne correspond pas à la séquence de son écriture");
-        }
+        }*/
 
     }
 
