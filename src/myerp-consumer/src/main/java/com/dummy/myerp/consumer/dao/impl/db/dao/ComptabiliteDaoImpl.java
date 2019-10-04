@@ -81,6 +81,8 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
     }
 
 
+
+
     // ==================== SequenceEcritureComptable - GET ====================
 
     /** setSQLgetEcritureComptableByYear */
@@ -306,5 +308,48 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
     }
 
 
+
+    // ==================== EcritureComptable - UPDATE ====================
+
+
+    /** SQLupdateSequenceEcritureComptable */
+    private static String SQLupdateSequenceEcritureComptable;
+    public void setSQLupdateSequenceEcritureComptable(String pSQLupdateSequenceEcritureComptable) {
+        SQLupdateSequenceEcritureComptable = pSQLupdateSequenceEcritureComptable;
+    }
+
+    @Override
+    public void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) {
+        // ===== Séquence Ecriture Comptable
+        NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
+        MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
+        vSqlParams.addValue("annee", pSequenceEcritureComptable.getAnnee());
+        vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
+        vJdbcTemplate.update(SQLupdateSequenceEcritureComptable, vSqlParams);
+    }
+
+
+    // ==================== EcritureComptable - INSERT ====================
+
+    /** SQLinsertSequenceEcritureComptable */
+    private static String SQLinsertSequenceEcritureComptable;
+    public void setSQLinsertSequenceEcritureComptable(String pSQLinsertSequenceEcritureComptable) {
+        SQLinsertSequenceEcritureComptable = pSQLinsertSequenceEcritureComptable;
+    }
+
+    @Override
+    public void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) {
+        // ===== Séquence Ecriture Comptable
+        NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
+        MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
+        vSqlParams.addValue("annee", pSequenceEcritureComptable.getAnnee());
+        vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
+        vJdbcTemplate.update(SQLinsertSequenceEcritureComptable, vSqlParams);
+
+        // ----- Récupération de l'année
+        Integer vAnnee = this.queryGetSequenceValuePostgreSQL(DataSourcesEnum.MYERP, "myerp.sequence_ecriture_comptable_id_seq",
+                Integer.class);
+        pSequenceEcritureComptable.setAnnee(vAnnee);
+    }
 
 }

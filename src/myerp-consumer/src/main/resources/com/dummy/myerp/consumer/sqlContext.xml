@@ -105,6 +105,31 @@
 
 
 
+        <property name="SQLinsertSequenceEcritureComptable">
+            <value>
+                INSERT INTO myerp.sequence_ecriture_comptable (
+                annee,
+                derniere_valeur
+                ) VALUES (
+                :annee,
+                :derniere_valeur
+                )
+            </value>
+        </property>
+
+
+
+        <property name="SQLupdateSequenceEcritureComptable">
+            <value>
+                UPDATE myerp.sequence_ecriture_comptable SET
+                derniere_valeur = :derniere_valeur
+                WHERE
+                annee = :annee
+            </value>
+        </property>
+
+
+
 
     </bean>
 

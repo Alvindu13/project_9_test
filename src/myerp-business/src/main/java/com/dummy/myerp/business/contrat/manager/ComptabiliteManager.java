@@ -44,6 +44,8 @@ public interface ComptabiliteManager {
 
     List<SequenceEcritureComptable> getListSequenceComptable();
 
+    SequenceEcritureComptable getSequenceEcritureComptableByAnnee(int pAnnee) throws NotFoundException;
+
     /**
      * Ajoute une référence à l'écriture comptable.
      *
@@ -90,4 +92,8 @@ public interface ComptabiliteManager {
      * @param pId l'id de l'écriture
      */
     void deleteEcritureComptable(Integer pId);
+
+    void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable);
+
+    void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable);
 }
