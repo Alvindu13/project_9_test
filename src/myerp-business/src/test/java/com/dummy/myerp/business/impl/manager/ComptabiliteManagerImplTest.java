@@ -123,25 +123,6 @@ public class ComptabiliteManagerImplTest {
                         "Achat")
         );
         vEcritureComptable.setDate(new Date());
-        vEcritureComptable.setLibelle("Libelle");
-        vEcritureComptable.getListLigneEcriture().add(
-                new LigneEcritureComptable(
-                        new CompteComptable(1),
-                        null,
-                        new BigDecimal(123),
-                        null
-                )
-        );
-
-        vEcritureComptable.getListLigneEcriture().add(
-                new LigneEcritureComptable(
-                        new CompteComptable(2),
-                        null,
-                        null,
-                        new BigDecimal(350)
-                )
-        );
-
 
         //manager.checkEcritureComptableUnit(vEcritureComptable);
 
@@ -192,7 +173,7 @@ public class ComptabiliteManagerImplTest {
 
         manager.addReference(vEcritureComptable);
 
-        verify(comptabiliteDao, times(1)).insertSequenceEcritureComptable("1");
+        verify(comptabiliteDao, times(1)).insertSequenceEcritureComptable(1);
 
 
     }

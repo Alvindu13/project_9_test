@@ -96,17 +96,61 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         // L'année de l'écriture correspond surrement à getDate de l'écriture comptable
         calendar.setTime(pEcritureComptable.getDate());
         Integer pAnneeEcriture = calendar.get(Calendar.YEAR);
-        Integer derniereValeurSequence = 1;
 
+        // On déclare la dernière valeurSéquence à 1
+        int derniereValeurSequence = 1;
 
+        // On instancie une séquence que nous allons manipuler
+        SequenceEcritureComptable pSequenceEcritureComptable = new SequenceEcritureComptable();
+        pSequenceEcritureComptable.setAnnee(pAnneeEcriture);
+
+        //1 et 2
+        // Cette boucle ajoute 1 à l'enregistreement s'il existe
         for (SequenceEcritureComptable vSequenceEcritureComptable : getListSequenceComptable()) {
-            if(vSequenceEcritureComptable.getAnnee() == pEcritureComptable.getDate().getYear()){
+            if(vSequenceEcritureComptable.getAnnee().equals(pAnneeEcriture)){
+
+                // On ajoute 1 à la dernière valeur de la séquence
                 derniereValeurSequence =  vSequenceEcritureComptable.getDerniereValeur() + 1;
+
+                // On set la dernière valeur de la séquence
+                pSequenceEcritureComptable.setDerniereValeur(derniereValeurSequence);
+
+                // On met à jour la référence
+                String journalCode = pEcritureComptable.getJournal().getCode();
+                String newSequence = String.format("%05d", derniereValeurSequence);
+                String pAnnee = pAnneeEcriture.toString(pAnneeEcriture);
+                String ref = journalCode + "-" + pAnnee + "/" + newSequence;
+                pEcritureComptable.setReference(ref);
+
+                // On update la séquence avec la dernière valeur actualisée
+                getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(pSequenceEcritureComptable);
             }
         }
 
-        if (derniereValeurSequence == 1)
-        getDaoProxy().getComptabiliteDao().insertEcritureComptable();
+        //Si l'enregistrement n'existe pas, la séquence vaut alors 1
+        if (derniereValeurSequence == 1){
+            // On set la séquence avec la dernière valeur (ici il s'agit de la première séquence donc 1)
+            pSequenceEcritureComptable.setDerniereValeur(derniereValeurSequence);
+
+            // On met à jour la référence
+            String journalCode = pEcritureComptable.getJournal().getCode();
+            String newSequence = String.format("%05d", derniereValeurSequence);
+            String pAnnee = pAnneeEcriture.toString(pAnneeEcriture);
+            String ref = journalCode + "-" + pAnnee + "/" + newSequence;
+            pEcritureComptable.setReference(ref);
+
+
+            // On insert la première séquence pour cette année dans la db
+            getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(pSequenceEcritureComptable);
+        }
+
+
+
+
+
+
+
+
 
 
 
