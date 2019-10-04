@@ -93,7 +93,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
          */
 
         calendar.setTime(pEcritureComptable.getDate());
-        Integer pAnneeEcriture = calendar.get(Calendar.YEAR);
+        pAnneeEcriture = calendar.get(Calendar.YEAR);
 
         // On déclare la dernière valeurSéquence à 1
         int derniereValeurSequence = 1;
