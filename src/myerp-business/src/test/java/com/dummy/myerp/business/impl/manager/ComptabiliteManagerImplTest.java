@@ -138,45 +138,35 @@ public class ComptabiliteManagerImplTest {
     @Test
     public void addReferenceAvecReferenceEnBaseTest() throws Exception {
 
-        when(comptabiliteDao.getListSequenceEcritureComptable()).thenReturn(Collections.emptyList());
-        when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
-        ComptabiliteManagerImpl.configure(mock(BusinessProxy.class), daoProxy, mock(TransactionManager.class));
-
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setDate(new Date());
         vEcritureComptable.setJournal(
                 new JournalComptable(
                         "AC",
                         "Achat")
         );
-        vEcritureComptable.setDate(new Date());
-        vEcritureComptable.setLibelle("Libelle");
-        vEcritureComptable.getListLigneEcriture().add(
-                new LigneEcritureComptable(
-                        new CompteComptable(1),
-                        null,
-                        new BigDecimal(123),
-                        null
-                )
-        );
 
-        vEcritureComptable.getListLigneEcriture().add(
-                new LigneEcritureComptable(
-                        new CompteComptable(2),
-                        null,
-                        null,
-                        new BigDecimal(350)
-                )
-        );
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(vEcritureComptable.getDate());
+        Integer pAnneeEcriture = calendar.get(Calendar.YEAR);
 
+        List<SequenceEcritureComptable> sequenceEcritureComptables = new ArrayList<>();
+        sequenceEcritureComptables.add(new SequenceEcritureComptable(pAnneeEcriture, 10));
+        sequenceEcritureComptables.add(new SequenceEcritureComptable(pAnneeEcriture, 11));
+        sequenceEcritureComptables.add(new SequenceEcritureComptable(pAnneeEcriture, 12));
 
-        //manager.checkEcritureComptableUnit(vEcritureComptable);
+        when(comptabiliteDao
+                .getListSequenceEcritureComptable())
+                .thenReturn(Collections.synchronizedList(sequenceEcritureComptables));
+        when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
+        ComptabiliteManagerImpl.configure(mock(BusinessProxy.class), daoProxy, mock(TransactionManager.class));
 
         manager.addReference(vEcritureComptable);
 
-        //verify(comptabiliteDao, times(1)).insertSequenceEcritureComptable(1);
+        SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable(pAnneeEcriture, 13);
 
-
+        verify(comptabiliteDao, times(1)).updateSequenceEcritureComptable(refEq(vSequenceEcritureComptable));
     }
 
 
