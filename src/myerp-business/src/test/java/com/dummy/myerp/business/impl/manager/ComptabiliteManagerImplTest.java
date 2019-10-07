@@ -1,27 +1,22 @@
 package com.dummy.myerp.business.impl.manager;
 
 import com.dummy.myerp.business.contrat.BusinessProxy;
-import com.dummy.myerp.business.impl.AbstractBusinessManager;
-import com.dummy.myerp.business.impl.BusinessProxyImpl;
 import com.dummy.myerp.business.impl.TransactionManager;
 import com.dummy.myerp.consumer.dao.contrat.ComptabiliteDao;
 import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
 import com.dummy.myerp.model.bean.comptabilite.*;
 import com.dummy.myerp.technical.exception.FunctionalException;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,8 +28,10 @@ public class ComptabiliteManagerImplTest {
     private DaoProxy daoProxy;
     @Mock
     private ComptabiliteDao comptabiliteDao;
+
     /**
      * Test des règles de gestion fonctionnelles de 1 à 5
+     *
      * @throws Exception
      */
     @Test
@@ -164,11 +161,35 @@ public class ComptabiliteManagerImplTest {
 
         manager.addReference(vEcritureComptable);
 
-        SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable(pAnneeEcriture, 13);
+        SequenceEcritureComptable vSequenceEcritureComptable =
+                new SequenceEcritureComptable(
+                        pAnneeEcriture,
+                        sequenceEcritureComptables
+                                .get(sequenceEcritureComptables.size() - 1)
+                                .getDerniereValeur() + 1
+                );
 
-        verify(comptabiliteDao, times(1)).updateSequenceEcritureComptable(refEq(vSequenceEcritureComptable));
+        // pour les tests ->
+        // sequenceEcritureComptables.set(pAnneeEcriture, actual : 13)
+
+        ArgumentCaptor<SequenceEcritureComptable> sequenceEcritureComptableArgumentCaptor =
+                ArgumentCaptor.forClass(SequenceEcritureComptable.class);
+
+        verify(comptabiliteDao, times(1))
+                .updateSequenceEcritureComptable(sequenceEcritureComptableArgumentCaptor.capture());
+
+        List<SequenceEcritureComptable> captureSequenceEcritureComptable =
+                sequenceEcritureComptableArgumentCaptor.getAllValues();
+
+        SequenceEcritureComptable expectedSeqEC = captureSequenceEcritureComptable.get(0);
+        SequenceEcritureComptable actualSeqEC = vSequenceEcritureComptable;
+
+        assertThat("Le résultat attendu n'est pas correct. Vérifiez la date d'écriture ou la dernière valeur de la séquence",
+                expectedSeqEC, is(actualSeqEC));
+
+        //assertEquals("captureSequenceEcritureComptable.get(0).toString(1)", vSequenceEcritureComptable);
+        //verify(comptabiliteDao, times(1)).updateSequenceEcritureComptable(refEq(vSequenceEcritureComptable));
     }
-
 
 
     @Test(expected = FunctionalException.class)
@@ -186,13 +207,13 @@ public class ComptabiliteManagerImplTest {
         vEcritureComptable.setDate(new Date());
         vEcritureComptable.setLibelle("Libelle");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
-                                                                                 null, new BigDecimal(123),
-                                                                                 null));
+                null, new BigDecimal(123),
+                null));
 
         //Il y a une erreur ICI val = 1234 pourtant le test passe (donc ne fonctionne pas)
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2),
-                                                                                 null, null,
-                                                                                 new BigDecimal(1234)));
+                null, null,
+                new BigDecimal(1234)));
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 
@@ -204,11 +225,11 @@ public class ComptabiliteManagerImplTest {
         vEcritureComptable.setDate(new Date());
         vEcritureComptable.setLibelle("Libelle");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
-                                                                                 null, new BigDecimal(123),
-                                                                                 null));
+                null, new BigDecimal(123),
+                null));
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
-                                                                                 null, new BigDecimal(123),
-                                                                                 null));
+                null, new BigDecimal(123),
+                null));
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 

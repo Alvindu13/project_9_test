@@ -1,6 +1,8 @@
 package com.dummy.myerp.model.bean.comptabilite;
 
 
+import java.util.Objects;
+
 /**
  * Bean représentant une séquence pour les références d'écriture comptable
  */
@@ -56,5 +58,19 @@ public class SequenceEcritureComptable {
             .append(vSEP).append("derniereValeur=").append(derniereValeur)
             .append("}");
         return vStB.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SequenceEcritureComptable)) return false;
+        SequenceEcritureComptable that = (SequenceEcritureComptable) o;
+        return Objects.equals(getAnnee(), that.getAnnee()) &&
+                Objects.equals(getDerniereValeur(), that.getDerniereValeur());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getAnnee(), getDerniereValeur());
     }
 }
