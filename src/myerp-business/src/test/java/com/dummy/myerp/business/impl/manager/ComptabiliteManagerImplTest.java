@@ -306,6 +306,41 @@ public class ComptabiliteManagerImplTest {
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 
+
+    @Test
+    public void test_check_Ecriture_Comptable_RG4() throws Exception {
+        EcritureComptable vEcritureComptable;
+        vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setLibelle("Libelle");
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setReference("AC-2019/00001");
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.getListLigneEcriture().add(
+                new LigneEcritureComptable(
+                        new CompteComptable(1),
+                        null,
+                        new BigDecimal(-123),
+                        null
+                )
+        );
+
+        vEcritureComptable.getListLigneEcriture().add(
+                new LigneEcritureComptable(
+                        new CompteComptable(2),
+                        null,
+                        null,
+                        new BigDecimal(350)
+                        )
+        );
+
+        manager.convertNegatifDebitOrCredit(vEcritureComptable);
+
+        if(vEcritureComptable.getListLigneEcriture().get(0).getCredit() != null){
+            assertEquals("Toutes les valeurs sont positives", vEcritureComptable.getListLigneEcriture().get(0).getCredit().intValue(), 123);
+        } else fail("le test a échoué car le débit de la première ligne est positive");
+    }
+
+
     @Test(expected = FunctionalException.class)
     public void test_check_Ecriture_Comptable_Unit_RG5_Annee_Ref_Differente_Annee_Ecriture() throws Exception {
         EcritureComptable vEcritureComptable;

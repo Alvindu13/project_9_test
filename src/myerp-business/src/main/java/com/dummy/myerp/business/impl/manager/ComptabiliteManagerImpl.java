@@ -174,15 +174,14 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                                               vViolations));
         }
 
-        /*--------------AJOUT-------
+        //AJOUT
         // ===== RG_Compta_1 : Le solde d'un compte comptable est \u00E9gal \u00E0 la somme des montants
         // au débit des lignes d'écriture diminuées de la somme des montants au crédit.
         // Si le résultat est positif, le solde est dit "débiteur", si le résultat est négatif le solde est dit "créditeur".
 
         BigDecimal soldeCompte = pEcritureComptable.getTotalDebit().subtract(pEcritureComptable.getTotalCredit());
         if(soldeCompte.compareTo(BigDecimal.ZERO) > 0) pEcritureComptable.setLibelle("solde débiteur");
-        else if(soldeCompte.compareTo(BigDecimal.ZERO) < 0) pEcritureComptable.setLibelle("solde créditeur");*/
-
+        else if(soldeCompte.compareTo(BigDecimal.ZERO) < 0) pEcritureComptable.setLibelle("solde créditeur");
 
 
         // ===== RG_Compta_2 : Pour qu'une écriture comptable soit valide, elle doit être équilibrée
@@ -211,6 +210,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             throw new FunctionalException(
                 "L'écriture comptable doit avoir au moins deux lignes : une ligne au débit et une ligne au crédit.");
         }
+
+        convertNegatifDebitOrCredit(pEcritureComptable);
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
@@ -283,6 +284,26 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 // Dans ce cas, c'est bon, ça veut dire qu'on n'a aucune autre écriture avec la même référence.
             }
         }
+    }
+
+    // TODO - AJOUT ===== RG_Compta_4 : Les montants des lignes d'écriture sont signés et peuvent prendre des valeurs négatives
+    protected synchronized void convertNegatifDebitOrCredit(EcritureComptable pEcritureComptable){
+
+        for (LigneEcritureComptable vLigneEcritureComptable : pEcritureComptable.getListLigneEcriture()) {
+            System.out.println(vLigneEcritureComptable.toString());
+
+            if ((vLigneEcritureComptable.getCredit() != null) && (vLigneEcritureComptable.getCredit().compareTo(BigDecimal.ZERO) < 0)) {
+                vLigneEcritureComptable.setDebit(vLigneEcritureComptable.getCredit().abs());
+                vLigneEcritureComptable.setCredit(new BigDecimal(0));
+            }
+            if ((vLigneEcritureComptable.getDebit() != null) && (vLigneEcritureComptable.getDebit().compareTo(BigDecimal.ZERO) < 0)) {
+                vLigneEcritureComptable.setCredit(vLigneEcritureComptable.getDebit().abs());
+                vLigneEcritureComptable.setDebit(new BigDecimal(0));
+            }
+
+            System.out.println(vLigneEcritureComptable.toString());
+        }
+
     }
 
     /**
