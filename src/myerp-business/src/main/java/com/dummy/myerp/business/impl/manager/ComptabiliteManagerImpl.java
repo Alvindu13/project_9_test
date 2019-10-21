@@ -180,14 +180,13 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         // Si le résultat est positif, le solde est dit "débiteur", si le résultat est négatif le solde est dit "créditeur".
 
         BigDecimal soldeCompte = pEcritureComptable.getTotalDebit().subtract(pEcritureComptable.getTotalCredit());
-
         if(soldeCompte.compareTo(BigDecimal.ZERO) > 0) pEcritureComptable.setLibelle("solde débiteur");
         else if(soldeCompte.compareTo(BigDecimal.ZERO) < 0) pEcritureComptable.setLibelle("solde créditeur");*/
 
 
 
         // ===== RG_Compta_2 : Pour qu'une écriture comptable soit valide, elle doit être équilibrée
-        if (!pEcritureComptable.isEquilibree()) {
+        if (pEcritureComptable.isEquilibree() == false) {
             throw new FunctionalException("L'écriture comptable n'est pas équilibrée.");
         }
 
@@ -220,12 +219,16 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         calendar.setTime(pEcritureComptable.getDate());
         pAnneeEcriture = calendar.get(Calendar.YEAR);
 
-        if (Integer.parseInt(pEcritureComptable.getReference().substring(3, 6)) != pAnneeEcriture){
+        /*if(pEcritureComptable.getReference() == null){
+            throw new FunctionalException("erij");
+        }*/
+
+        if (Integer.parseInt(pEcritureComptable.getReference().substring(3, 7)) != pAnneeEcriture){
             throw new FunctionalException(
                     "L'année de référence de l'écriture comptable ne correspond pas à la date de son écriture");
         }
 
-        if(!pEcritureComptable.getReference().substring(0, 1).equals(pEcritureComptable.getJournal().getCode())){
+        if(!pEcritureComptable.getReference().substring(0, 2).equals(pEcritureComptable.getJournal().getCode())){
             throw new FunctionalException(
                     "Le code journal de référence ne correspond pas à la référence du journal lors de son écriture");
         }
@@ -235,15 +238,20 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             SequenceEcritureComptable pSequenceEcritureComptable = getDaoProxy()
                             .getComptabiliteDao()
                             .getSequenceEcritureComptableByYear(pAnneeEcriture);
+
             // On reconstruit la séquence au bon format
             String sequence = String.format("%05d", pSequenceEcritureComptable.getDerniereValeur());
-            if(!pEcritureComptable.getReference().substring(8, 12).equals(sequence)){
+            if(!pEcritureComptable.getReference().substring(8, 13).equals(sequence)){
                 throw new FunctionalException(
                         "La séquence de référence ne correspond pas à la séquence de son écriture");
             }
         } catch (NotFoundException e) {
             e.printStackTrace();
         }
+
+
+        // Ajouter cas RG_Compta_1
+
     }
 
 
@@ -255,12 +263,14 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
     protected void checkEcritureComptableContext(EcritureComptable pEcritureComptable) throws FunctionalException {
+
         // ===== RG_Compta_6 : La référence d'une écriture comptable doit être unique
         if (StringUtils.isNoneEmpty(pEcritureComptable.getReference())) {
             try {
                 // Recherche d'une écriture ayant la même référence
                 EcritureComptable vECRef = getDaoProxy().getComptabiliteDao().getEcritureComptableByRef(
                     pEcritureComptable.getReference());
+
 
                 // Si l'écriture à vérifier est une nouvelle écriture (id == null),
                 // ou si elle ne correspond pas à l'écriture trouvée (id != idECRef),
