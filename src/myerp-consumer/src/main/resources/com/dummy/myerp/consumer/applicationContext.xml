@@ -12,7 +12,8 @@
         <property name="targetMethod" value="configure"/>
         <property name="arguments">
             <map>
-                <entry value-ref="dataSourceMYERP">
+                <!--entry value-ref="dataSourceMYERP"-->
+                <entry value-ref="dataSource">
                     <key>
                         <value type="com.dummy.myerp.consumer.db.DataSourcesEnum">MYERP</value>
                     </key>
@@ -43,8 +44,25 @@
 
 
     <!-- ==================== Databases ==================== -->
-    <bean id="dataSourceMYERP" class="com.dummy.myerp.technical.util.spring.NullFactoryBean">
+    <!--bean id="dataSourceMYERP" class="com.dummy.myerp.technical.util.spring.NullFactoryBean">
         <constructor-arg value="javax.sql.DataSource"/>
+    </bean-->
+
+    <!--bean name="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/GameManager" />
+        <property name="username" value="gamemanagertest" />
+        <property name="password" value="1" />
+        <property name="initialSize" value="2" />
+        <property name="maxActive" value="5" />
+    </bean-->
+
+    <bean id="dataSource"
+          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver" />
+        <property name="url" value="jdbc:postgresql://localhost:5432/mydb" />
+        <property name="username" value="postgres" />
+        <property name="password" value="" />
     </bean>
 
     <!-- ========== SQL ========== -->

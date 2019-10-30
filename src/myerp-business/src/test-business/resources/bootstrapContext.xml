@@ -5,7 +5,7 @@
 
 
     <!-- BusinessProxy -->
-    <bean id="businessProxy"
+    <bean id="BusinessProxy"
           class="com.dummy.myerp.business.impl.BusinessProxyImpl"
           scope="singleton"
           factory-method="getInstance">
@@ -25,11 +25,10 @@
 
     <!-- PlatformTransactionManager pour le DataSource MYERP -->
     <bean id="txManagerMYERP" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSourceMYERP"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
 
     <!-- ========== RESOURCES ========== -->
-    <import resource="classpath:/com/dummy/myerp/consumer/sqlContext.xml"/>
     <import resource="classpath:/com/dummy/myerp/consumer/applicationContext.xml"/>
 </beans>
