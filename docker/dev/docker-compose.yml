@@ -8,7 +8,8 @@ services:
     container_name: "my_postgres"
     #   Setup the username, password, and database name. You can changes these values.
     environment:
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=john
+      - POSTGRES_PASSWORD=pwd0123456789
       - POSTGRES_DB=mydb
     #   Maps port 54320 (localhost) to port 5432 on the container. You can change the ports to fix your needs.
     ports:

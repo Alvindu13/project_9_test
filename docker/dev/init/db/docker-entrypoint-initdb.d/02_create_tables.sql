@@ -5,6 +5,7 @@ CREATE TABLE MYERP.journal_comptable (
                 CONSTRAINT journal_comptable_pk PRIMARY KEY (code)
 );
 
+CREATE SEQUENCE MYERP.sequence_ecriture_comptable_id_seq;
 
 CREATE TABLE MYERP.sequence_ecriture_comptable (
                 journal_code VARCHAR(5) NOT NULL,

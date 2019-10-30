@@ -53,7 +53,7 @@ public class ComptabiliteManagerImplTest {
 
             // On set les dépendances et les valeurs des méthodes appelés
         when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
-        when(comptabiliteDao.getSequenceEcritureComptableByYear(2019)).thenReturn(new SequenceEcritureComptable(2019, 1));
+        when(comptabiliteDao.getSequenceEcritureComptableByYear(2019)).thenReturn(new SequenceEcritureComptable("AC", 2019, 1));
         ComptabiliteManagerImpl.configure(mock(BusinessProxy.class), daoProxy, mock(TransactionManager.class));
 
         //  When & Then
@@ -82,7 +82,7 @@ public class ComptabiliteManagerImplTest {
         vEcritureComptable.setDate(date);
         Integer pAnneeEcriture = 2019;
         manager.addReference(vEcritureComptable);
-        SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable(pAnneeEcriture, 1);
+        SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable("AC", pAnneeEcriture, 1);
         verify(comptabiliteDao, times(1)).insertSequenceEcritureComptable(eq(vSequenceEcritureComptable));
         assertEquals(vEcritureComptable.getReference(), "AC-2019/00001");
 
@@ -104,9 +104,9 @@ public class ComptabiliteManagerImplTest {
         Integer pAnneeEcriture = 2019;
 
         List<SequenceEcritureComptable> sequenceEcritureComptables = new ArrayList<>();
-        sequenceEcritureComptables.add(new SequenceEcritureComptable(pAnneeEcriture, 10));
-        sequenceEcritureComptables.add(new SequenceEcritureComptable(pAnneeEcriture, 11));
-        sequenceEcritureComptables.add(new SequenceEcritureComptable(pAnneeEcriture, 12));
+        sequenceEcritureComptables.add(new SequenceEcritureComptable("AC", pAnneeEcriture, 10));
+        sequenceEcritureComptables.add(new SequenceEcritureComptable("AC", pAnneeEcriture, 11));
+        sequenceEcritureComptables.add(new SequenceEcritureComptable("AC", pAnneeEcriture, 12));
 
         when(comptabiliteDao
                 .getListSequenceEcritureComptable())
@@ -118,6 +118,7 @@ public class ComptabiliteManagerImplTest {
 
         SequenceEcritureComptable vSequenceEcritureComptable =
                 new SequenceEcritureComptable(
+                        "AC",
                         pAnneeEcriture,
                         sequenceEcritureComptables
                                 .get(sequenceEcritureComptables.size() - 1)

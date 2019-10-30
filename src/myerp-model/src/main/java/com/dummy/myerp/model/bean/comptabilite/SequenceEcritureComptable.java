@@ -10,27 +10,35 @@ public class SequenceEcritureComptable {
 
     // ==================== Attributs ====================
     /** L'année */
+    private String codeJournal;
+    /** L'année */
     private Integer annee;
     /** La dernière valeur utilisée */
     private Integer derniereValeur;
 
     // ==================== Constructeurs ====================
+
     /**
      * Constructeur
      */
     public SequenceEcritureComptable() {
     }
 
+
     /**
-     * Constructeur
+     * Instantiates a new Sequence ecriture comptable.
      *
-     * @param pAnnee -
-     * @param pDerniereValeur -
+     * @param codeJournal    the code journal
+     * @param annee          the annee
+     * @param derniereValeur the derniere valeur
      */
-    public SequenceEcritureComptable(Integer pAnnee, Integer pDerniereValeur) {
-        annee = pAnnee;
-        derniereValeur = pDerniereValeur;
+    public SequenceEcritureComptable(String codeJournal, Integer annee, Integer derniereValeur) {
+        this.codeJournal = codeJournal;
+        this.annee = annee;
+        this.derniereValeur = derniereValeur;
     }
+
+
 
 
     // ==================== Getters/Setters ====================
@@ -46,7 +54,8 @@ public class SequenceEcritureComptable {
     public void setDerniereValeur(Integer pDerniereValeur) {
         derniereValeur = pDerniereValeur;
     }
-
+    public String getCodeJournal() { return codeJournal; }
+    public void setCodeJournal(String codeJournal) { this.codeJournal = codeJournal; }
 
     // ==================== Méthodes ====================
     @Override
@@ -54,9 +63,10 @@ public class SequenceEcritureComptable {
         final StringBuilder vStB = new StringBuilder(this.getClass().getSimpleName());
         final String vSEP = ", ";
         vStB.append("{")
-            .append("annee=").append(annee)
-            .append(vSEP).append("derniereValeur=").append(derniereValeur)
-            .append("}");
+                .append("code journal=").append(codeJournal)
+                .append("annee=").append(annee)
+                .append(vSEP).append("derniereValeur=").append(derniereValeur)
+                .append("}");
         return vStB.toString();
     }
 

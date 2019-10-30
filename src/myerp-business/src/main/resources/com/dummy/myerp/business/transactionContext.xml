@@ -16,7 +16,11 @@
 
     <!-- PlatformTransactionManager pour le DataSource MYERP -->
     <bean id="txManagerMYERP" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSourceMYERP"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
+
+
+    <!-- ========== RESOURCES ========== -->
+    <import resource="classpath:/com/dummy/myerp/consumer/applicationContext.xml"/>
 
 </beans>

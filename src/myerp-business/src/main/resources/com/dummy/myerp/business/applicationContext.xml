@@ -7,7 +7,7 @@
     <!-- ====================   Business-Proxy   ==================== -->
 
     <!-- BusinessProxy -->
-    <bean id="businessProxy"
+    <bean id="BusinessProxy"
           class="com.dummy.myerp.business.impl.BusinessProxyImpl"
           scope="singleton"
           factory-method="getInstance">

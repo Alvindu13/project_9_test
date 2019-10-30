@@ -12,8 +12,9 @@ public class SequenceEcritureComptableRM implements RowMapper<SequenceEcritureCo
     @Override
     public SequenceEcritureComptable mapRow(ResultSet rs, int rowNum) throws SQLException {
         SequenceEcritureComptable vBean = new SequenceEcritureComptable();
+        vBean.setDerniereValeur(rs.getInt("derniere_valeur"));
         vBean.setAnnee(rs.getInt("annee"));
-        vBean.setDerniereValeur(rs.getInt("derniereValeur"));
+        vBean.setCodeJournal(rs.getString("journal_code"));
 
         return vBean;
 
