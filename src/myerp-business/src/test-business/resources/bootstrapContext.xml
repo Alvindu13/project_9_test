@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <!-- BusinessProxy -->
+    <bean id="businessProxy"
+          class="com.dummy.myerp.business.impl.BusinessProxyImpl"
+          scope="singleton"
+          factory-method="getInstance">
+        <constructor-arg ref="DaoProxy"/>
+        <constructor-arg ref="TransactionManager"/>
+    </bean>
+
+
+    <!-- Transaction Manager -->
+    <bean id="TransactionManager"
+          class="com.dummy.myerp.business.impl.TransactionManager"
+          scope="singleton"
+          factory-method="getInstance">
+        <constructor-arg ref="txManagerMYERP"/>
+    </bean>
+
+
+    <!-- PlatformTransactionManager pour le DataSource MYERP -->
+    <bean id="txManagerMYERP" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSourceMYERP"/>
+    </bean>
+
+
+    <!-- ========== RESOURCES ========== -->
+    <import resource="classpath:/com/dummy/myerp/consumer/sqlContext.xml"/>
+    <import resource="classpath:/com/dummy/myerp/consumer/applicationContext.xml"/>
+</beans>

@@ -290,7 +290,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     protected synchronized void convertNegatifDebitOrCredit(EcritureComptable pEcritureComptable){
 
         for (LigneEcritureComptable vLigneEcritureComptable : pEcritureComptable.getListLigneEcriture()) {
-            System.out.println(vLigneEcritureComptable.toString());
 
             if ((vLigneEcritureComptable.getCredit() != null) && (vLigneEcritureComptable.getCredit().compareTo(BigDecimal.ZERO) < 0)) {
                 vLigneEcritureComptable.setDebit(vLigneEcritureComptable.getCredit().abs());
@@ -301,7 +300,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 vLigneEcritureComptable.setDebit(new BigDecimal(0));
             }
 
-            System.out.println(vLigneEcritureComptable.toString());
         }
 
     }
