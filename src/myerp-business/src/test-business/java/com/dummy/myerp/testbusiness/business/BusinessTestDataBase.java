@@ -22,30 +22,39 @@ public class BusinessTestDataBase extends BusinessTestCase {
 
 
 
-    /*@Test
-    public void should_save_ecriture_comptable() throws FunctionalException {
-
+    @Test
+    public void should_create_ecriture_comptable() throws FunctionalException {
         // given
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setLibelle("testTT");
         vEcritureComptable.setReference("AC-2019/00001");
         vEcritureComptable.setDate(new Date());
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1), null, new BigDecimal(123), null));
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2), null, null, new BigDecimal(123)));
-
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(401), null, new BigDecimal(123), null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411), null, null, new BigDecimal(123)));
 
         // when
         SpringRegistry.getBusinessProxy().getComptabiliteManager().insertEcritureComptable(vEcritureComptable);
 
+        // then
+        Long writeNumber = new JdbcTemplate(SpringRegistry.getDatasource())
+                .queryForObject("SELECT COUNT(*) FROM myerp.ecriture_comptable WHERE reference = ?", Long.class, "AC-2019/00001");
+        assertEquals(writeNumber, Long.valueOf(1L));
+    }
 
-    }*/
+
+    @Test
+    public void should_update_ecriture_comptable() throws FunctionalException {
+    }
+
+    @Test
+    public void should_delete_ecriture_comptable() throws FunctionalException {
+    }
 
 
     @Test
     @Order(1)
-    public void should_save_sequence_ecriture_comptable() throws FunctionalException {
-
+    public void should_create_sequence_ecriture_comptable() throws FunctionalException {
         //given
         SequenceEcritureComptable vSequenceEcritureComptable =
                 new SequenceEcritureComptable("BQ", 2019, 4);

@@ -66,8 +66,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     }
 
     @Override
-    public SequenceEcritureComptable getSequenceEcritureComptableByAnnee(int pAnnee) throws NotFoundException {
-        return getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByYear(pAnnee);
+    public SequenceEcritureComptable getSequenceEcritureComptableByCodeAndAnneeAndValeur(String code, Integer annee, Integer lastValue) throws NotFoundException {
+        return getDaoProxy().getComptabiliteDao().getSequenceEcritureComptableByCodeAndAnneeAndValeur(code, annee, lastValue);
     }
 
     /**
@@ -224,12 +224,24 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             throw new FunctionalException("erij");
         }*/
 
-        if (Integer.parseInt(pEcritureComptable.getReference().substring(3, 7)) != pAnneeEcriture){
+        Integer anneeRef = Integer.parseInt(pEcritureComptable.getReference().substring(3, 7));
+        String journalCodeRef = pEcritureComptable.getReference().substring(0, 2);
+        String lastValueRefStr = pEcritureComptable.getReference().substring(8, 13);
+        Integer lastValueRef = Integer.parseInt(lastValueRefStr);
+
+        System.out.println(anneeRef);
+        System.out.println(journalCodeRef);
+        System.out.println(lastValueRefStr);
+        System.out.println(lastValueRef);
+
+        System.out.println(pAnneeEcriture);
+
+        if (!anneeRef.equals(pAnneeEcriture)){
             throw new FunctionalException(
                     "L'année de référence de l'écriture comptable ne correspond pas à la date de son écriture");
         }
 
-        if(!pEcritureComptable.getReference().substring(0, 2).equals(pEcritureComptable.getJournal().getCode())){
+        if(!journalCodeRef.equals(pEcritureComptable.getJournal().getCode())){
             throw new FunctionalException(
                     "Le code journal de référence ne correspond pas à la référence du journal lors de son écriture");
         }
@@ -238,11 +250,11 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             // On remonte la séquence pour l'année d'écriture
             SequenceEcritureComptable pSequenceEcritureComptable = getDaoProxy()
                             .getComptabiliteDao()
-                            .getSequenceEcritureComptableByYear(pAnneeEcriture);
+                            .getSequenceEcritureComptableByCodeAndAnneeAndValeur(journalCodeRef, anneeRef, lastValueRef);
 
             // On reconstruit la séquence au bon format
             String sequence = String.format("%05d", pSequenceEcritureComptable.getDerniereValeur());
-            if(!pEcritureComptable.getReference().substring(8, 13).equals(sequence)){
+            if(!lastValueRefStr.equals(sequence)){
                 throw new FunctionalException(
                         "La séquence de référence ne correspond pas à la séquence de son écriture");
             }

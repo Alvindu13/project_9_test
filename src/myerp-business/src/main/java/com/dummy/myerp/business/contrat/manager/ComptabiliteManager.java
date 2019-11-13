@@ -44,7 +44,7 @@ public interface ComptabiliteManager {
 
     List<SequenceEcritureComptable> getListSequenceComptable();
 
-    SequenceEcritureComptable getSequenceEcritureComptableByAnnee(int pAnnee) throws NotFoundException;
+    SequenceEcritureComptable getSequenceEcritureComptableByCodeAndAnneeAndValeur(String code, Integer annee, Integer lastValue) throws NotFoundException;
 
     /**
      * Ajoute une référence à l'écriture comptable.

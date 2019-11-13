@@ -68,6 +68,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         return vList;
     }
 
+
     private static String SQLgetListSequenceEcritureComptable;
     public void setSQLgetListSequenceEcritureComptable(String pSQLgetListSequenceEcritureComptable) {
         SQLgetListSequenceEcritureComptable = pSQLgetListSequenceEcritureComptable;
@@ -86,28 +87,29 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
     // ==================== SequenceEcritureComptable - GET ====================
 
     /** setSQLgetEcritureComptableByYear */
-    private static String SQLgetSequenceEcritureComptableByYear;
-    public void setSQLgetSequenceEcritureComptableByYear(String pSQLgetSequenceEcritureComptableByYear) {
-        SQLgetSequenceEcritureComptableByYear = pSQLgetSequenceEcritureComptableByYear;
+    private static String SQLgetSequenceEcritureComptableByCodeAndAnneeAndValeur;
+    public void setSQLgetSequenceEcritureComptableByCodeAndAnneeAndValeur(String pSQLgetSequenceEcritureComptableByCodeAndAnneeAndValeur) {
+        SQLgetSequenceEcritureComptableByCodeAndAnneeAndValeur = pSQLgetSequenceEcritureComptableByCodeAndAnneeAndValeur;
     }
 
     /**
      * Permet d'obtenir une séquence d'écriture comptable par {@Link pAnnee}
-     * @param pAnnee
      * @return
      * @throws NotFoundException
      */
     @Override
-    public SequenceEcritureComptable getSequenceEcritureComptableByYear(Integer pAnnee) throws NotFoundException {
+    public SequenceEcritureComptable getSequenceEcritureComptableByCodeAndAnneeAndValeur(String code, Integer annee, Integer lastValue) throws NotFoundException {
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
-        vSqlParams.addValue("annee", pAnnee);
+        vSqlParams.addValue("journal_code", code);
+        vSqlParams.addValue("annee", annee);
+        vSqlParams.addValue("derniere_valeur", lastValue);
         SequenceEcritureComptableRM vRM = new SequenceEcritureComptableRM();
         SequenceEcritureComptable vBean;
         try {
-            vBean = vJdbcTemplate.queryForObject(SQLgetSequenceEcritureComptableByYear, vSqlParams, vRM);
+            vBean = vJdbcTemplate.queryForObject(SQLgetSequenceEcritureComptableByCodeAndAnneeAndValeur, vSqlParams, vRM);
         } catch (EmptyResultDataAccessException vEx) {
-            throw new NotFoundException("Sequence d'écriture comptable non trouvée : année=" + pAnnee);
+            throw new NotFoundException("Sequence d'écriture comptable non trouvée" + code + annee + lastValue);
         }
         return vBean;
     }
@@ -236,9 +238,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
             vSqlParams.addValue("compte_comptable_numero", vLigne.getCompteComptable().getNumero());
             vSqlParams.addValue("libelle", vLigne.getLibelle());
             vSqlParams.addValue("debit", vLigne.getDebit());
-
             vSqlParams.addValue("credit", vLigne.getCredit());
-
             vJdbcTemplate.update(SQLinsertListLigneEcritureComptable, vSqlParams);
         }
     }
@@ -328,6 +328,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
         vJdbcTemplate.update(SQLupdateSequenceEcritureComptable, vSqlParams);
     }
+
 
 
     // ==================== EcritureComptable - INSERT ====================

@@ -28,16 +28,6 @@ public interface ComptabiliteDao {
     List<JournalComptable> getListJournalComptable();
 
 
-    /**
-     * Renvoie la séquence d'écriture comptable
-     * @param pAnnee l'année de la séquence
-     * @return {@link SequenceEcritureComptable}
-     * @throws NotFoundException
-     */
-    SequenceEcritureComptable getSequenceEcritureComptableByYear(Integer pAnnee) throws NotFoundException;
-
-
-
     // ==================== EcritureComptable ====================
 
 
@@ -98,4 +88,6 @@ public interface ComptabiliteDao {
     void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable);
 
     void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable);
+
+    SequenceEcritureComptable getSequenceEcritureComptableByCodeAndAnneeAndValeur(String code, Integer annee, Integer lastValue) throws NotFoundException;
 }

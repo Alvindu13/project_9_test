@@ -53,7 +53,9 @@ public class ComptabiliteManagerImplTest {
 
             // On set les dépendances et les valeurs des méthodes appelés
         when(daoProxy.getComptabiliteDao()).thenReturn(comptabiliteDao);
-        when(comptabiliteDao.getSequenceEcritureComptableByYear(2019)).thenReturn(new SequenceEcritureComptable("AC", 2019, 1));
+        when(comptabiliteDao
+                .getSequenceEcritureComptableByCodeAndAnneeAndValeur("AC", 2019, 1))
+                .thenReturn(new SequenceEcritureComptable("AC", 2019, 1));
         ComptabiliteManagerImpl.configure(mock(BusinessProxy.class), daoProxy, mock(TransactionManager.class));
 
         //  When & Then
