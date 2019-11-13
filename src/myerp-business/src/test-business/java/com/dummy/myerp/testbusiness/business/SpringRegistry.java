@@ -7,6 +7,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import com.dummy.myerp.business.contrat.BusinessProxy;
 import com.dummy.myerp.business.impl.TransactionManager;
 
+import javax.sql.DataSource;
+
 
 /**
  * Registre des Beans Spring.
@@ -79,6 +81,13 @@ public final class SpringRegistry {
 
 
     /**
+     */
+    public static DataSource getDatasource() {
+        return (DataSource) SpringRegistry.getBean("dataSource");
+    }
+
+
+    /**
      * Renvoie l'instance de {@link BusinessProxy} de l'application
      *
      * @return {@link BusinessProxy}
@@ -86,7 +95,6 @@ public final class SpringRegistry {
     public static BusinessProxy getBusinessProxy() {
         return (BusinessProxy) SpringRegistry.getBean("BusinessProxy");
     }
-
 
     /**
      * Renvoie l'instance de {@link TransactionManager} de l'application

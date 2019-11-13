@@ -2,9 +2,11 @@ package com.dummy.myerp.testbusiness.business;
 
 import com.dummy.myerp.model.bean.comptabilite.*;
 import com.dummy.myerp.technical.exception.FunctionalException;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -12,14 +14,11 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Date;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertEquals;
 
 
 public class BusinessTestDataBase extends BusinessTestCase {
-
-
-
-    @Autowired
-    private DataSource dataSource;
 
 
 
@@ -39,26 +38,25 @@ public class BusinessTestDataBase extends BusinessTestCase {
         // when
         SpringRegistry.getBusinessProxy().getComptabiliteManager().insertEcritureComptable(vEcritureComptable);
 
-        // then
-        /*Long petNumber = new JdbcTemplate(dataSource).queryForObject("SELECT COUNT(*) FROM ecriture_comptable WHERE reference = ?", Long.class, 1, "BQ-2019/00001");
-        Assert.assertEquals(java.util.Optional.ofNullable(petNumber), 1L);
+
     }*/
 
 
     @Test
+    @Order(1)
     public void should_save_sequence_ecriture_comptable() throws FunctionalException {
 
-        // given
+        //given
         SequenceEcritureComptable vSequenceEcritureComptable =
-                new SequenceEcritureComptable("AC", 2019, 1);
-
+                new SequenceEcritureComptable("BQ", 2019, 4);
 
         // when
         SpringRegistry.getBusinessProxy().getComptabiliteManager().insertSequenceEcritureComptable(vSequenceEcritureComptable);
 
         // then
-        /*Long petNumber = new JdbcTemplate(dataSource).queryForObject("SELECT COUNT(*) FROM ecriture_comptable WHERE reference = ?", Long.class, 1, "BQ-2019/00001");
-        Assert.assertEquals(java.util.Optional.ofNullable(petNumber), 1L);*/
+        Long writeNumber = new JdbcTemplate(SpringRegistry.getDatasource())
+                .queryForObject("SELECT COUNT(*) FROM myerp.sequence_ecriture_comptable WHERE journal_code = ? AND annee = ? AND derniere_Valeur = ?", Long.class, "BQ", 2019, 4);
+        assertEquals(writeNumber, Long.valueOf(1L));
     }
 
 
