@@ -1,6 +1,7 @@
 version: "3"
 services:
   #  Create a service named db.
+
   db:
     #   Use the Docker Image postgres. This will pull the newest release.
     image: "postgres"
@@ -19,4 +20,17 @@ services:
     volumes:
       - "./postgres-data:/var/lib/postgresql/data"
       - "./init/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d"
+
+
+  jenkins:
+    image: jenkinsci/blueocean
+    user: root
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+      - "50000:50000"
+    volumes:
+      - ./jenkins_data:/var/jenkins_home
+      - ./home:/home
+      - /var/run/docker.sock:/var/run/docker.sock
 
