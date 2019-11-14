@@ -6,6 +6,9 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 
 public class EcritureComptableTest {
 
@@ -21,7 +24,7 @@ public class EcritureComptableTest {
     }
 
     @Test
-    public void isEquilibree() {
+    public void isEquilibreeTest() {
         EcritureComptable vEcriture;
         vEcriture = new EcritureComptable();
 
@@ -44,4 +47,50 @@ public class EcritureComptableTest {
         Assert.assertFalse(vEcriture.toString(), vEcriture.isEquilibree());
     }
 
+    @Test
+    public void getTotalDebitTest() {
+
+        //given
+        EcritureComptable vEcriture;
+        vEcriture = new EcritureComptable();
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "10.00", null));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "20.00", "1.00"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(2, null, "30.00"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(2, "1.00", "2.00"));
+
+        BigDecimal totalDebitExpected = new BigDecimal(0);
+        for (LigneEcritureComptable LEC : vEcriture.getListLigneEcriture()){
+            if(LEC.getDebit() != null) totalDebitExpected = totalDebitExpected.add(LEC.getDebit());
+        }
+
+        //when
+        BigDecimal totalDebitMethod = vEcriture.getTotalDebit();
+
+        //then
+        assertEquals(totalDebitMethod,totalDebitExpected);
+    }
+
+    @Test
+    public void getTotalCreditTest() {
+
+        //given
+        EcritureComptable vEcriture;
+        vEcriture = new EcritureComptable();
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "10.00", null));
+        vEcriture.getListLigneEcriture().add(this.createLigne(1, "20.00", "1.00"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(2, null, "30.00"));
+        vEcriture.getListLigneEcriture().add(this.createLigne(2, "1.00", "2.00"));
+
+        BigDecimal totalCreditExpected = new BigDecimal(0);
+        for (LigneEcritureComptable LEC : vEcriture.getListLigneEcriture()){
+            if(LEC.getCredit() != null) totalCreditExpected = totalCreditExpected.add(LEC.getCredit());
+        }
+
+        //when
+        BigDecimal totalCreditMethod = vEcriture.getTotalCredit();
+
+        //then
+        assertEquals(totalCreditMethod,totalCreditExpected);
+
+    }
 }

@@ -73,11 +73,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     /**
      * {@inheritDoc}
      */
-    // TODO à tester
     @Override
     public synchronized void addReference(EcritureComptable pEcritureComptable) {
-        // TODO à implémenter
-
         // Bien se réferer à la JavaDoc de cette méthode !
         /* Le principe :
                 1.  Remonter depuis la persitance la dernière valeur de la séquence du journal pour l'année de l'écriture
@@ -91,7 +88,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                     (table sequence_ecriture_comptable)
 
          */
-
         calendar.setTime(pEcritureComptable.getDate());
         pAnneeEcriture = calendar.get(Calendar.YEAR);
 
@@ -148,7 +144,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
     /**
      * {@inheritDoc}
      */
-    // TODO à tester
     @Override
     public void checkEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException {
         this.checkEcritureComptableUnit(pEcritureComptable);
@@ -163,7 +158,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      * @param pEcritureComptable -
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
-    // TODO tests à compléter
     protected void checkEcritureComptableUnit(EcritureComptable pEcritureComptable) throws FunctionalException {
         // ===== Vérification des contraintes unitaires sur les attributs de l'écriture
         Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);
@@ -213,10 +207,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
         convertNegatifDebitOrCredit(pEcritureComptable);
 
-        // TODO ===== RG_Compta_5 : Format et contenu de la référence
         // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
-
-
         calendar.setTime(pEcritureComptable.getDate());
         pAnneeEcriture = calendar.get(Calendar.YEAR);
 
@@ -224,17 +215,12 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             throw new FunctionalException("erij");
         }*/
 
-        Integer anneeRef = Integer.parseInt(pEcritureComptable.getReference().substring(3, 7));
-        String journalCodeRef = pEcritureComptable.getReference().substring(0, 2);
-        String lastValueRefStr = pEcritureComptable.getReference().substring(8, 13);
+        Integer journalCodeLength = pEcritureComptable.getJournal().getCode().length();
+        Integer anneeRef = Integer.parseInt(pEcritureComptable.getReference().substring(journalCodeLength + 1, journalCodeLength + 5));
+        String journalCodeRef = pEcritureComptable.getReference().substring(0, journalCodeLength);
+        String lastValueRefStr = pEcritureComptable.getReference().substring(journalCodeLength + 6, journalCodeLength + 11);
         Integer lastValueRef = Integer.parseInt(lastValueRefStr);
 
-        System.out.println(anneeRef);
-        System.out.println(journalCodeRef);
-        System.out.println(lastValueRefStr);
-        System.out.println(lastValueRef);
-
-        System.out.println(pAnneeEcriture);
 
         if (!anneeRef.equals(pAnneeEcriture)){
             throw new FunctionalException(
@@ -298,7 +284,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         }
     }
 
-    // TODO - AJOUT ===== RG_Compta_4 : Les montants des lignes d'écriture sont signés et peuvent prendre des valeurs négatives
+    // RG_Compta_4 : Les montants des lignes d'écriture sont signés et peuvent prendre des valeurs négatives
     protected synchronized void convertNegatifDebitOrCredit(EcritureComptable pEcritureComptable){
 
         for (LigneEcritureComptable vLigneEcritureComptable : pEcritureComptable.getListLigneEcriture()) {

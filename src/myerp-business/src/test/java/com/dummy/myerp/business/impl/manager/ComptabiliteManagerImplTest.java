@@ -235,7 +235,6 @@ public class ComptabiliteManagerImplTest {
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 
-    // TODO COMMENT SAVOIR SI L'exeption a bien été appelée pour cette erreur ?
     @Test(expected = FunctionalException.class)
     public void test_check_Ecriture_Comptable_Unit_RG3_Sans_Ligne_Ecriture_En_Credit() throws Exception {
         EcritureComptable vEcritureComptable;

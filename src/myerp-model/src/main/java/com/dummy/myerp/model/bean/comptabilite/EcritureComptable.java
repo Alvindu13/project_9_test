@@ -25,8 +25,9 @@ public class EcritureComptable {
     /** Journal comptable */
     @NotNull private JournalComptable journal;
     /** The Reference. */
-    //TODO le pattern n'est pas bon => à corriger
-    //@Pattern(regexp = "\\d{1,5}-\\d{4}/\\d{5}")
+    // extodo le pattern n'est pas bon => à corriger
+    //@Pattern(regexp = "\\d{1,5}-\\d{4}/\\d{1}")
+    @Pattern(regexp = "[A-Z]{1,5}-\\d{4}/\\d{5}")
     private String reference;
     /** The Date. */
     @NotNull private Date date;
