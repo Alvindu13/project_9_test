@@ -22,14 +22,8 @@ pipeline {
             post {
                 always {
                     /*need update*/
-                    junit '** ** /target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Deliver') {
-            steps {
-                dir("src") {
-                    sh './jenkins/scripts/deliver.sh'
+                    archive "target/**/*"
+                    junit 'target/surefire-reports/*.xml'
                 }
             }
         }
