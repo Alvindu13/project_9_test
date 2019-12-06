@@ -22,6 +22,7 @@ pipeline {
             post {
                 always {
                     /*need update*/
+                    sh 'cd ${WORKSPACE}'
                     archive "target/**/*"
                     junit 'target/surefire-reports/*.xml'
                 }
