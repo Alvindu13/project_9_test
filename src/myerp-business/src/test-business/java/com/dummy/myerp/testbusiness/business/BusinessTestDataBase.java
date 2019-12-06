@@ -105,9 +105,9 @@ public class BusinessTestDataBase extends BusinessTestCase {
         assertEquals(writeNumber, Long.valueOf(1L));
     }*/
 
-    @Test
+    /*@Test
     public void should_delete_ecriture_comptable() throws FunctionalException {
-    }
+    }*/
 
 
 

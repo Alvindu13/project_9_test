@@ -15,7 +15,9 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh 'mvn test'
+                dir("src") {
+                    sh 'mvn test'
+                }
             }
             post {
                 always {
@@ -25,7 +27,9 @@ pipeline {
         }
         stage('Deliver') {
             steps {
-                sh './jenkins/scripts/deliver.sh'
+                dir("src") {
+                    sh './jenkins/scripts/deliver.sh'
+                }
             }
         }
     }
