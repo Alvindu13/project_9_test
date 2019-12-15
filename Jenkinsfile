@@ -23,6 +23,7 @@ pipeline {
                 always {
                     /*need update*/
                     sh 'cd ${WORKSPACE}'
+                    //archiveArtifacts artifacts: '**/target/libs/**/*.jar', fingerprint: true
                     junit '**/target/surefire-reports/*.xml'
                 }
             }
